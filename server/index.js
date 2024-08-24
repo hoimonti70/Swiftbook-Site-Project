@@ -63,24 +63,68 @@ app.get("/users/:id", (req, res) => {
   });
 });
 
-app.post("/users", (req, res) => {
-  const { name, email, password } = req.body;
-  const query = "INSERT INTO users (name, email) VALUES (?, ?)";
-  db.query(query, [name, email, password], (err, result) => {
+// User Registration Endpoint
+app.post("/users/register", (req, res) => {
+  const { name, email, password, image_url } = req.body;
+
+  // Validate required fields
+  if (!name || !email || !password) {
+    return res.status(400).send("Name, email, and password are required.");
+  }
+
+  // Check if the email already exists
+  const checkEmailQuery = "SELECT COUNT(*) AS count FROM users WHERE email = ?";
+  db.query(checkEmailQuery, [email], (err, results) => {
     if (err) {
-      console.error(err);
-      res.status(500).send("An error occurred while creating user.");
-    } else {
-      res.status(201).send("User created successfully.");
+      console.error("Error checking email existence:", err);
+      return res.status(500).send("An error occurred while checking email.");
     }
+
+    if (results[0].count > 0) {
+      return res
+        .status(400)
+        .send("Email already exists. Please use a different email.");
+    }
+
+    // Prepare SQL query to insert new user
+    const insertQuery =
+      "INSERT INTO users (name, email, password, image_url) VALUES (?, ?, ?, ?)";
+    const values = [name, email, password, image_url || ""];
+
+    // Execute SQL query to insert new user
+    db.query(insertQuery, values, (err, result) => {
+      if (err) {
+        console.error("Error inserting user:", err);
+        return res.status(500).send("An error occurred while creating user.");
+      }
+
+      // Fetch the created user data
+      const userId = result.insertId;
+      const selectQuery =
+        "SELECT id, name, email, image_url FROM users WHERE id = ?";
+
+      db.query(selectQuery, [userId], (err, results) => {
+        if (err) {
+          console.error("Error fetching user:", err);
+          return res
+            .status(500)
+            .send("An error occurred while retrieving user data.");
+        }
+
+        const createdUser = results[0];
+        res.status(201).json({
+          message: "User created successfully.",
+          user: createdUser,
+        });
+      });
+    });
   });
 });
-
 // user log in
 app.post("/users/login", (req, res) => {
   const { email, password } = req.body;
   const query =
-    "SELECT id, name, email FROM users WHERE email = ? AND password = ?";
+    "SELECT id, name, email, image_url FROM users WHERE email = ? AND password = ?";
   db.query(query, [email, password], (err, results) => {
     if (err) {
       console.error(err);

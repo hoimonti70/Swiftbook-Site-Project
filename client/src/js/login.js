@@ -25,7 +25,7 @@ const handleLogin = async (e) => {
       localStorage.setItem("current_user", JSON.stringify(data)); // Save user data as a string
 
       // Redirect to the dashboard
-      window.location.href = "pages/dashboard.html";
+      window.location.href = "dashboard.html";
     } else {
       document.getElementById("error-message").textContent = data.message;
     }

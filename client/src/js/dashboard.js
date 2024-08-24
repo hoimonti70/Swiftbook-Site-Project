@@ -26,7 +26,7 @@ function getUserInfo() {
 
 // Redirect to the login page
 function redirectToLogin() {
-  window.location.href = "../index.html";
+  window.location.href = "login.html";
 }
 
 // Display user information on the dashboard
@@ -39,11 +39,12 @@ function displayUserInfo() {
     document.getElementById("user-email").textContent = userInfo.email;
 
     // Set user image if available
+
+    console.log(userInfo.image_url);
     if (userInfo.image_url) {
       document.getElementById("user-image").src = userInfo.image_url;
     } else {
-      document.getElementById("user-image").src =
-        "../images/default-avatar.png";
+      document.getElementById("user-image").src = "../assets/avatar.png";
     }
   } else {
     document.getElementById("user-info").textContent =
@@ -54,7 +55,7 @@ function displayUserInfo() {
 // Handle logout process
 function handleLogout() {
   localStorage.removeItem("current_user");
-  window.location.href = "../index.html";
+  window.location.href = "login.html";
 }
 
 document.getElementById("logout-btn").addEventListener("click", handleLogout);
