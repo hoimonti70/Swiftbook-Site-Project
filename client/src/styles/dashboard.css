@@ -1,0 +1,69 @@
+/* Styles for the dashboard page */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.dashboard-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+  margin-right: 15px;
+}
+
+.user-info {
+  text-align: left;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.user-email {
+  font-size: 14px;
+  color: #666;
+}
+
+.logout-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.logout-btn:hover {
+  background-color: #ff1a1a;
+}
