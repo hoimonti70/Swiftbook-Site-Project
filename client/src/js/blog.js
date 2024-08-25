@@ -1,5 +1,37 @@
+// Function to redirect to login page
+function redirectToLogin() {
+  window.location.href = "login.html";
+}
+
+// Retrieve user information from localStorage
+function getUserInfo() {
+  const userData = localStorage.getItem("current_user");
+
+  if (userData) {
+    try {
+      const user = JSON.parse(userData);
+
+      // Check if the user ID exists
+      if (user.id) {
+        return user;
+      } else {
+        // Redirect to login if the user ID is missing
+        redirectToLogin();
+      }
+    } catch (error) {
+      console.error("Error parsing userData:", error);
+      redirectToLogin(); // Redirect if there is an error parsing the data
+    }
+  } else {
+    redirectToLogin(); // Redirect if no user data is found
+  }
+
+  return null;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const blogPostsContainer = document.getElementById("blog-posts");
+  const userInfo = getUserInfo(); // Retrieve the user info from localStorage
 
   // Function to create a blog post element
   function createBlogPostElement(post) {
@@ -71,11 +103,82 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => console.error("Error fetching comments:", error));
 
+    // Add comment form
+    const addCommentForm = document.createElement("div");
+    addCommentForm.classList.add("add-comment");
+
+    const commentInput = document.createElement("input");
+    commentInput.type = "text";
+    commentInput.placeholder = "Add a comment...";
+    commentInput.classList.add("comment-input");
+
+    const submitButton = document.createElement("button");
+    submitButton.textContent = "Post";
+    submitButton.classList.add("comment-submit");
+
+    // Handle comment submission
+    submitButton.addEventListener("click", function () {
+      const commentText = commentInput.value;
+      if (commentText.trim() && userInfo) {
+        // Post the comment to the server using userInfo and post ID
+        fetch(`http://localhost:3001/comments`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            post_id: post.id, // Use the post ID
+            user_id: userInfo.id, // Use the user ID from localStorage
+            user_name: userInfo.name, // Use the user name from localStorage
+            user_image_url: userInfo.image_url, // Use the user image URL from localStorage
+            text: commentText,
+          }),
+        })
+          .then((response) => response.json())
+          .then((newComment) => {
+            // Add the new comment to the comments container
+            const commentElement = document.createElement("div");
+            commentElement.classList.add("comment");
+
+            const commentUser = document.createElement("div");
+            commentUser.classList.add("comment-user");
+
+            const commentUserImage = document.createElement("img");
+            commentUserImage.src = newComment.user_image_url;
+            commentUserImage.alt = `${newComment.user_name}'s profile picture`;
+            commentUserImage.classList.add("comment-user-image");
+
+            const commentUserName = document.createElement("p");
+            commentUserName.textContent = newComment.user_name;
+            commentUserName.classList.add("comment-user-name");
+
+            commentUser.appendChild(commentUserImage);
+            commentUser.appendChild(commentUserName);
+
+            const commentTextElement = document.createElement("p");
+            commentTextElement.textContent = newComment.text;
+            commentTextElement.classList.add("comment-text");
+
+            commentElement.appendChild(commentUser);
+            commentElement.appendChild(commentTextElement);
+            commentsContainer.appendChild(commentElement);
+
+            // Clear the input field
+            commentInput.value = "";
+          })
+          .catch((error) => console.error("Error posting comment:", error));
+      }
+    });
+
+    addCommentForm.appendChild(commentInput);
+    addCommentForm.appendChild(submitButton);
+
     postElement.appendChild(userElement);
     postElement.appendChild(postDescription);
     postElement.appendChild(postImage);
     postElement.appendChild(postDate);
     postElement.appendChild(commentsContainer);
+    postElement.appendChild(addCommentForm); // Append the comment form here
 
     blogPostsContainer.appendChild(postElement);
   }
