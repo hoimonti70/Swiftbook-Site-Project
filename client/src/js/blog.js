@@ -53,6 +53,11 @@ document.addEventListener("DOMContentLoaded", function () {
     userElement.appendChild(userImage);
     userElement.appendChild(userName);
 
+    const postDate = document.createElement("p");
+    postDate.textContent = new Date(post.created_at).toLocaleString();
+    postDate.classList.add("post-date");
+    userElement.appendChild(postDate);
+
     const postDescription = document.createElement("p");
     postDescription.textContent = post.description;
     postDescription.classList.add("post-description");
@@ -61,10 +66,6 @@ document.addEventListener("DOMContentLoaded", function () {
     postImage.src = post.image_url;
     postImage.alt = "Blog post image";
     postImage.classList.add("post-image");
-
-    const postDate = document.createElement("p");
-    postDate.textContent = new Date(post.created_at).toLocaleString();
-    postDate.classList.add("post-date");
 
     const commentsContainer = document.createElement("div");
     commentsContainer.classList.add("comments-container");
@@ -176,7 +177,6 @@ document.addEventListener("DOMContentLoaded", function () {
     postElement.appendChild(userElement);
     postElement.appendChild(postDescription);
     postElement.appendChild(postImage);
-    postElement.appendChild(postDate);
     postElement.appendChild(commentsContainer);
     postElement.appendChild(addCommentForm); // Append the comment form here
 
