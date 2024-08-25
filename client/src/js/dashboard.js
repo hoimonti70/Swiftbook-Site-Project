@@ -1,4 +1,3 @@
-// Retrieve user information from localStorage
 function getUserInfo() {
   const userData = localStorage.getItem("current_user");
 
@@ -22,12 +21,10 @@ function getUserInfo() {
   return null;
 }
 
-// Redirect to the login page
 function redirectToLogin() {
   window.location.href = "login.html";
 }
 
-// Display user information on the dashboard
 function displayUserInfo() {
   const userInfo = getUserInfo();
 
@@ -47,7 +44,6 @@ function displayUserInfo() {
   }
 }
 
-// Handle logout process
 function handleLogout() {
   localStorage.removeItem("current_user");
   window.location.href = "login.html";
@@ -91,7 +87,6 @@ function createPostElement(post) {
   return postElement;
 }
 
-// Function to load and display user's posts
 function displayUserPosts() {
   const userInfo = getUserInfo();
   if (userInfo) {
@@ -110,7 +105,6 @@ function displayUserPosts() {
   }
 }
 
-// Function to handle creating a new post
 function handleCreatePost() {
   const userInfo = getUserInfo();
   if (userInfo) {
@@ -146,17 +140,13 @@ function openEditPopup(postId, currentDescription, currentImageUrl) {
   const editImageInput = document.getElementById("edit-image");
   const saveEditButton = document.getElementById("edit-form-submit");
 
-  // Set current values to the input fields
   editDescriptionInput.value = currentDescription;
-  editImageInput.value = currentImageUrl; // Set the current image URL
+  editImageInput.value = currentImageUrl;
 
-  // Store the post ID in a hidden field for later use
   document.getElementById("edit-post-id").value = postId;
 
-  // Show the popup
   editPopup.style.display = "block";
 
-  // Set the event listener for the save button
   (saveEditButton.onclick = () => handleEditPost(postId)), displayUserPosts();
 }
 
@@ -174,7 +164,7 @@ function handleEditPost(postId) {
         },
         body: JSON.stringify({
           description: postDescription,
-          image_url: postImageUrl, // Update image URL if needed
+          image_url: postImageUrl,
         }),
       })
         .then((response) => response.json())
@@ -188,13 +178,11 @@ function handleEditPost(postId) {
   window.location.reload();
 }
 
-// Function to close the edit popup
 function closeEditPopup() {
   document.getElementById("edit-popup").style.display = "none";
   displayUserPosts();
 }
 
-// Function to handle deleting a post
 function handleDeletePost(postId) {
   const userInfo = getUserInfo();
   if (userInfo) {
@@ -213,19 +201,15 @@ function handleDeletePost(postId) {
   window.location.reload();
 }
 
-// Load user information and posts on page load
 displayUserInfo();
 displayUserPosts();
 
-// Add event listener for logout
 document.getElementById("logout-btn").addEventListener("click", handleLogout);
 
-// Add event listener for creating a new post
 document
   .getElementById("post-submit")
   .addEventListener("click", handleCreatePost);
 
-// Add event listener for closing the edit popup
 document
   .getElementById("close-edit-popup-btn")
   .addEventListener("click", closeEditPopup);

@@ -1,4 +1,3 @@
-/* Reset and base styles */
 * {
   margin: 0;
   padding: 0;
@@ -12,7 +11,6 @@ body {
   padding: 0;
 }
 
-/* Navbar styles */
 .navbar {
   background-color: #333;
   color: #fff;
@@ -56,10 +54,9 @@ body {
   color: #f0f0f0;
 }
 
-/* Main container styles */
 .main-container {
   display: flex;
-  height: calc(100vh - 60px); /* Adjust height based on navbar height */
+  height: calc(100vh - 60px);
   padding: 20px;
 }
 
@@ -142,7 +139,6 @@ h2 {
   background-color: #ff1a1a;
 }
 
-/* Post section styles */
 .new-post {
   background-color: white;
   padding: 20px;
@@ -213,7 +209,6 @@ input[type="text"] {
   border-radius: 5px;
 }
 
-/* Edit Form Popup Styles */
 #edit-popup {
   display: none;
   position: fixed;

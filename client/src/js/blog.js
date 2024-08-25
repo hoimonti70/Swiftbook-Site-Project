@@ -1,9 +1,7 @@
-// Function to redirect to login page
 function redirectToLogin() {
   window.location.href = "login.html";
 }
 
-// Retrieve user information from localStorage
 function getUserInfo() {
   const userData = localStorage.getItem("current_user");
 
@@ -11,19 +9,17 @@ function getUserInfo() {
     try {
       const user = JSON.parse(userData);
 
-      // Check if the user ID exists
       if (user.id) {
         return user;
       } else {
-        // Redirect to login if the user ID is missing
         redirectToLogin();
       }
     } catch (error) {
       console.error("Error parsing userData:", error);
-      redirectToLogin(); // Redirect if there is an error parsing the data
+      redirectToLogin();
     }
   } else {
-    redirectToLogin(); // Redirect if no user data is found
+    redirectToLogin();
   }
 
   return null;
@@ -31,9 +27,8 @@ function getUserInfo() {
 
 document.addEventListener("DOMContentLoaded", function () {
   const blogPostsContainer = document.getElementById("blog-posts");
-  const userInfo = getUserInfo(); // Retrieve the user info from localStorage
+  const userInfo = getUserInfo();
 
-  // Function to create a blog post element
   function createBlogPostElement(post) {
     const postElement = document.createElement("div");
     postElement.classList.add("blog-post");
@@ -70,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const commentsContainer = document.createElement("div");
     commentsContainer.classList.add("comments-container");
 
-    // Fetch and display comments for each post
     fetch(`http://localhost:3001/comments/post/${post.id}`)
       .then((response) => response.json())
       .then((comments) => {
@@ -100,7 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
           commentElement.appendChild(commentUser);
           commentElement.appendChild(commentText);
 
-          // Add delete button if the comment belongs to the current user
           if (userInfo && comment.user_id === userInfo.id) {
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
@@ -115,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
               })
                 .then((response) => {
                   if (response.ok) {
-                    commentElement.remove(); // Remove the comment element from the DOM
+                    commentElement.remove();
                   } else {
                     console.error(
                       "Error deleting comment:",
@@ -136,7 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => console.error("Error fetching comments:", error));
 
-    // Add comment form
     const addCommentForm = document.createElement("div");
     addCommentForm.classList.add("add-comment");
 
@@ -149,27 +141,24 @@ document.addEventListener("DOMContentLoaded", function () {
     submitButton.textContent = "Post";
     submitButton.classList.add("comment-submit");
 
-    // Handle comment submission
     submitButton.addEventListener("click", function () {
       const commentText = commentInput.value;
       if (commentText.trim() && userInfo) {
-        // Post the comment to the server using userInfo and post ID
         fetch(`http://localhost:3001/comments`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            post_id: post.id, // Use the post ID
-            user_id: userInfo.id, // Use the user ID from localStorage
-            user_name: userInfo.name, // Use the user name from localStorage
-            user_image_url: userInfo.image_url, // Use the user image URL from localStorage
+            post_id: post.id,
+            user_id: userInfo.id,
+            user_name: userInfo.name,
+            user_image_url: userInfo.image_url,
             text: commentText,
           }),
         })
           .then((response) => response.json())
           .then((newComment) => {
-            // Add the new comment to the comments container
             const commentElement = document.createElement("div");
             commentElement.classList.add("comment");
 
@@ -195,7 +184,6 @@ document.addEventListener("DOMContentLoaded", function () {
             commentElement.appendChild(commentUser);
             commentElement.appendChild(commentTextElement);
 
-            // Add delete button for the newly added comment
             if (userInfo && newComment.user_id === userInfo.id) {
               const deleteButton = document.createElement("button");
               deleteButton.textContent = "Delete";
@@ -210,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                   .then((response) => {
                     if (response.ok) {
-                      commentElement.remove(); // Remove the comment element from the DOM
+                      commentElement.remove();
                     } else {
                       console.error(
                         "Error deleting comment:",
@@ -228,7 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             commentsContainer.appendChild(commentElement);
 
-            // Clear the input field
             commentInput.value = "";
           })
           .catch((error) => console.error("Error posting comment:", error));
@@ -242,12 +229,11 @@ document.addEventListener("DOMContentLoaded", function () {
     postElement.appendChild(postDescription);
     postElement.appendChild(postImage);
     postElement.appendChild(commentsContainer);
-    postElement.appendChild(addCommentForm); // Append the comment form here
+    postElement.appendChild(addCommentForm);
 
     blogPostsContainer.appendChild(postElement);
   }
 
-  // Fetch and display blog posts
   fetch("http://localhost:3001/posts")
     .then((response) => response.json())
     .then((posts) => {

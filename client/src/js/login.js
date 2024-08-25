@@ -1,5 +1,5 @@
 const handleLogin = async (e) => {
-  console.log("Form submission detected!"); // Debugging log
+  console.log("Form submission detected!");
   e.preventDefault();
 
   const email = document.getElementById("email").value;
@@ -21,10 +21,8 @@ const handleLogin = async (e) => {
     console.log("Data:", data);
 
     if (response.ok) {
-      // Assuming the server returns user data upon successful login
-      localStorage.setItem("current_user", JSON.stringify(data)); // Save user data as a string
+      localStorage.setItem("current_user", JSON.stringify(data));
 
-      // Redirect to the dashboard
       window.location.href = "dashboard.html";
     } else {
       document.getElementById("error-message").textContent = data.message;
@@ -36,5 +34,4 @@ const handleLogin = async (e) => {
   }
 };
 
-// Ensure the correct form ID is used
 document.getElementById("login-form").addEventListener("submit", handleLogin);

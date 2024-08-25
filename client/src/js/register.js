@@ -1,7 +1,7 @@
 document
   .getElementById("register-form")
   .addEventListener("submit", async function (e) {
-    console.log("Form submission detected!"); // Debugging log
+    console.log("Form submission detected!");
     e.preventDefault();
 
     const name = document.getElementById("name").value;
@@ -23,7 +23,6 @@ document
       const data = await response.json();
 
       if (response.ok) {
-        // Redirect to login page on successful registration
         window.location.href = "login.html";
       } else {
         document.getElementById("error-message").textContent = data.message;

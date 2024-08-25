@@ -1,15 +1,13 @@
-//index.js
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import mysql from "mysql";
 import cors from "cors";
 
-// Initialize Express
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Create MySQL connection
+// create MySQL connection
 const db = mysql.createConnection({
   host: process.env.DB_HOST || "localhost",
   user: process.env.DB_USER || "root",
@@ -17,20 +15,20 @@ const db = mysql.createConnection({
   database: process.env.DB_NAME || "swiftbook_db",
 });
 
-// Connect to MySQL
+// connect to MySQL
 db.connect((err) => {
   if (err) {
     console.error("Error connecting to the database:", err.message);
-    process.exit(1); // Exit the process with a failure code
+    process.exit(1);
   }
   console.log("Database connected.");
 });
 
-// Middleware
+// middleware
 app.use(cors());
 app.use(express.json());
 
-// Root route
+// root route
 app.get("/", (req, res) => {
   res.send("Welcome to the Restaurant Commerce Shop API");
 });
@@ -63,7 +61,7 @@ app.get("/users/:id", (req, res) => {
   });
 });
 
-// User Registration Endpoint
+// user registration
 app.post("/users/register", (req, res) => {
   const { name, email, password, image_url } = req.body;
 
@@ -152,23 +150,6 @@ app.get("/posts", (req, res) => {
   });
 });
 
-app.get("/posts/:id", (req, res) => {
-  const query =
-    "SELECT p.id, p.user_id, u.name AS user_name, u.image_url AS user_image_url, p.description, p.image_url, p.created_at FROM posts p JOIN users u ON p.user_id = u.id WHERE p.id = ?";
-  db.query(query, [req.params.id], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("An error occurred while fetching post.");
-    } else {
-      if (results.length > 0) {
-        res.json(results[0]);
-      } else {
-        res.status(404).send("Post not found.");
-      }
-    }
-  });
-});
-
 app.get("/posts/user/:userId", (req, res) => {
   const query =
     "SELECT p.id, p.user_id, u.name AS user_name, u.image_url AS user_image_url, p.description, p.image_url, p.created_at FROM posts p JOIN users u ON p.user_id = u.id WHERE p.user_id = ?";
@@ -217,36 +198,6 @@ app.put("/posts/:id", (req, res) => {
       res.status(500).send("An error occurred while updating post.");
     } else {
       res.status(204).send();
-    }
-  });
-});
-
-app.get("/comments", (req, res) => {
-  const query =
-    "SELECT c.id, c.post_id, c.user_id, u.name AS user_name, u.image_url AS user_image_url, c.text, c.created_at FROM comments c JOIN users u ON c.user_id = u.id";
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("An error occurred while fetching comments.");
-    } else {
-      res.json(results);
-    }
-  });
-});
-
-app.get("/comments/:id", (req, res) => {
-  const query =
-    "SELECT c.id, c.post_id, c.user_id, u.name AS user_name, u.image_url AS user_image_url, c.text, c.created_at FROM comments c JOIN users u ON c.user_id = u.id WHERE c.id = ?";
-  db.query(query, [req.params.id], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("An error occurred while fetching comment.");
-    } else {
-      if (results.length > 0) {
-        res.json(results[0]);
-      } else {
-        res.status(404).send("Comment not found.");
-      }
     }
   });
 });
@@ -313,7 +264,7 @@ app.delete("/posts/:id", (req, res) => {
   });
 });
 
-// Start the server
+// start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
