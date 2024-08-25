@@ -85,18 +85,24 @@ body {
   margin-right: 15px;
 }
 
-.blog-post .user-info .user-details {
+.blog-post .user-details {
   display: flex;
   flex-direction: column;
 }
 
-.blog-post .user-info .user-details .user-name {
+.blog-post .user-name {
   font-size: 1rem;
   font-weight: bold;
   color: #333;
 }
 
-.blog-post .user-info .user-details .post-time {
+.post-date {
+  margin-left: 4px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.blog-post .post-date {
   font-size: 0.8rem;
   color: #666;
 }
@@ -114,21 +120,28 @@ body {
   margin-bottom: 10px;
 }
 
-.blog-post .comments-section {
+.blog-post {
   margin-top: 10px;
 }
 
-.blog-post .comments-section .comment {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+/* Comment container styles */
+.comments-container {
+  margin-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
-.blog-post .comments-section .comment img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+.comments-container::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.comments-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.comments-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
 
 .comment {
@@ -137,11 +150,8 @@ body {
   flex-direction: column;
   align-items: left;
   margin-bottom: 10px;
-
   border-radius: 10px;
-
   padding: 10px;
-
   background-color: #f1f1f1;
 }
 
@@ -160,47 +170,37 @@ body {
 
 .comment-text {
   background-color: #f1f1f1;
-
   padding: 10px;
   border-radius: 10px;
   font-size: 0.9rem;
   color: #333;
 }
 
-.blog-post .comments-section .comment p {
-  background-color: #f1f1f1;
-  padding: 10px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  color: #333;
-}
-
-.blog-post .comments-section .add-comment {
+.add-comment {
   display: flex;
   align-items: center;
   margin-top: 10px;
 }
 
-.blog-post .comments-section .add-comment input {
-  flex-grow: 1;
+.add-comment .comment-input {
+  flex: 1;
   padding: 10px;
-  border-radius: 20px;
+  border-radius: 5px;
   border: 1px solid #ddd;
   font-size: 0.9rem;
-  margin-right: 10px;
 }
 
-.blog-post .comments-section .add-comment button {
-  padding: 10px 15px;
-  border-radius: 20px;
-  border: none;
-  background-color: #4caf50;
+.add-comment .comment-submit {
+  background-color: #007bff;
   color: white;
-  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
   font-size: 0.9rem;
-  transition: background-color 0.3s;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
-.blog-post .comments-section .add-comment button:hover {
-  background-color: #45a049;
+.add-comment .comment-submit:hover {
+  background-color: #0056b3;
 }
