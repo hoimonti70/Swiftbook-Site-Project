@@ -176,6 +176,20 @@ body {
   color: #333;
 }
 
+.comment-delete {
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.8rem;
+  border: none;
+  background-color: transparent;
+  text-align: right;
+  font-weight: 500;
+}
+
+.comment-delete:hover {
+  color: #b30000;
+}
+
 .add-comment {
   display: flex;
   align-items: center;

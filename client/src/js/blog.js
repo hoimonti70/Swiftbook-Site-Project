@@ -99,6 +99,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
           commentElement.appendChild(commentUser);
           commentElement.appendChild(commentText);
+
+          // Add delete button if the comment belongs to the current user
+          if (userInfo && comment.user_id === userInfo.id) {
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.classList.add("comment-delete");
+
+            deleteButton.addEventListener("click", function () {
+              fetch(`http://localhost:3001/comments/${comment.id}`, {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    commentElement.remove(); // Remove the comment element from the DOM
+                  } else {
+                    console.error(
+                      "Error deleting comment:",
+                      response.statusText
+                    );
+                  }
+                })
+                .catch((error) =>
+                  console.error("Error deleting comment:", error)
+                );
+            });
+
+            commentElement.appendChild(deleteButton);
+          }
+
           commentsContainer.appendChild(commentElement);
         });
       })
@@ -162,6 +194,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
             commentElement.appendChild(commentUser);
             commentElement.appendChild(commentTextElement);
+
+            // Add delete button for the newly added comment
+            if (userInfo && newComment.user_id === userInfo.id) {
+              const deleteButton = document.createElement("button");
+              deleteButton.textContent = "Delete";
+              deleteButton.classList.add("comment-delete");
+
+              deleteButton.addEventListener("click", function () {
+                fetch(`http://localhost:3001/comments/${newComment.id}`, {
+                  method: "DELETE",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                })
+                  .then((response) => {
+                    if (response.ok) {
+                      commentElement.remove(); // Remove the comment element from the DOM
+                    } else {
+                      console.error(
+                        "Error deleting comment:",
+                        response.statusText
+                      );
+                    }
+                  })
+                  .catch((error) =>
+                    console.error("Error deleting comment:", error)
+                  );
+              });
+
+              commentElement.appendChild(deleteButton);
+            }
+
             commentsContainer.appendChild(commentElement);
 
             // Clear the input field
