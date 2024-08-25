@@ -79,13 +79,14 @@ function createPostElement(post) {
   deleteButton.addEventListener("click", () => handleDeletePost(post.id));
 
   const userInfo = getUserInfo();
+
+  postElement.appendChild(postTitle);
+  postElement.appendChild(postImage);
+
   if (userInfo && userInfo.id === post.user_id) {
     postElement.appendChild(editButton);
     postElement.appendChild(deleteButton);
   }
-
-  postElement.appendChild(postTitle);
-  postElement.appendChild(postImage);
 
   return postElement;
 }
