@@ -207,6 +207,20 @@ app.post("/posts", (req, res) => {
   });
 });
 
+app.put("/posts/:id", (req, res) => {
+  const { description, image_url } = req.body;
+  const query = "UPDATE posts SET description = ?, image_url = ? WHERE id = ?";
+  const values = [description, image_url, req.params.id];
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while updating post.");
+    } else {
+      res.status(204).send();
+    }
+  });
+});
+
 app.get("/comments", (req, res) => {
   const query =
     "SELECT c.id, c.post_id, c.user_id, u.name AS user_name, u.image_url AS user_image_url, c.text, c.created_at FROM comments c JOIN users u ON c.user_id = u.id";
