@@ -139,6 +139,166 @@ app.post("/users/login", (req, res) => {
   });
 });
 
+app.get("/posts", (req, res) => {
+  const query =
+    "SELECT p.id, p.user_id, u.name AS user_name, u.image_url AS user_image_url, p.description, p.image_url, p.created_at FROM posts p JOIN users u ON p.user_id = u.id";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while fetching posts.");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get("/posts/:id", (req, res) => {
+  const query =
+    "SELECT p.id, p.user_id, u.name AS user_name, u.image_url AS user_image_url, p.description, p.image_url, p.created_at FROM posts p JOIN users u ON p.user_id = u.id WHERE p.id = ?";
+  db.query(query, [req.params.id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while fetching post.");
+    } else {
+      if (results.length > 0) {
+        res.json(results[0]);
+      } else {
+        res.status(404).send("Post not found.");
+      }
+    }
+  });
+});
+
+app.get("/posts/user/:userId", (req, res) => {
+  const query =
+    "SELECT p.id, p.user_id, u.name AS user_name, u.image_url AS user_image_url, p.description, p.image_url, p.created_at FROM posts p JOIN users u ON p.user_id = u.id WHERE p.user_id = ?";
+  db.query(query, [req.params.userId], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while fetching posts.");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.post("/posts", (req, res) => {
+  const { user_id, description, image_url } = req.body;
+  const query =
+    "INSERT INTO posts (user_id, description, image_url) VALUES (?, ?, ?)";
+  const values = [user_id, description, image_url];
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while creating post.");
+    } else {
+      const postId = result.insertId;
+      const selectQuery =
+        "SELECT p.id, p.user_id, u.name AS user_name, u.image_url AS user_image_url, p.description, p.image_url, p.created_at FROM posts p JOIN users u ON p.user_id = u.id WHERE p.id = ?";
+      db.query(selectQuery, [postId], (err, results) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("An error occurred while fetching post.");
+        } else {
+          res.status(201).json(results[0]);
+        }
+      });
+    }
+  });
+});
+
+app.get("/comments", (req, res) => {
+  const query =
+    "SELECT c.id, c.post_id, c.user_id, u.name AS user_name, u.image_url AS user_image_url, c.text, c.created_at FROM comments c JOIN users u ON c.user_id = u.id";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while fetching comments.");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get("/comments/:id", (req, res) => {
+  const query =
+    "SELECT c.id, c.post_id, c.user_id, u.name AS user_name, u.image_url AS user_image_url, c.text, c.created_at FROM comments c JOIN users u ON c.user_id = u.id WHERE c.id = ?";
+  db.query(query, [req.params.id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while fetching comment.");
+    } else {
+      if (results.length > 0) {
+        res.json(results[0]);
+      } else {
+        res.status(404).send("Comment not found.");
+      }
+    }
+  });
+});
+
+app.get("/comments/post/:postId", (req, res) => {
+  const query =
+    "SELECT c.id, c.post_id, c.user_id, u.name AS user_name, u.image_url AS user_image_url, c.text, c.created_at FROM comments c JOIN users u ON c.user_id = u.id WHERE c.post_id = ?";
+  db.query(query, [req.params.postId], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while fetching comments.");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.post("/comments", (req, res) => {
+  const { post_id, user_id, text } = req.body;
+  const query =
+    "INSERT INTO comments (post_id, user_id, text) VALUES (?, ?, ?)";
+  const values = [post_id, user_id, text];
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while creating comment.");
+    } else {
+      const commentId = result.insertId;
+      const selectQuery =
+        "SELECT c.id, c.post_id, c.user_id, u.name AS user_name, u.image_url AS user_image_url, c.text, c.created_at FROM comments c JOIN users u ON c.user_id = u.id WHERE c.id = ?";
+      db.query(selectQuery, [commentId], (err, results) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("An error occurred while fetching comment.");
+        } else {
+          res.status(201).json(results[0]);
+        }
+      });
+    }
+  });
+});
+
+app.delete("/comments/:id", (req, res) => {
+  const query = "DELETE FROM comments WHERE id = ?";
+  db.query(query, [req.params.id], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while deleting comment.");
+    } else {
+      res.status(204).send();
+    }
+  });
+});
+
+app.delete("/posts/:id", (req, res) => {
+  const query = "DELETE FROM posts WHERE id = ?";
+  db.query(query, [req.params.id], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while deleting post.");
+    } else {
+      res.status(204).send();
+    }
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
